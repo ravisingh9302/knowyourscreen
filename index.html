@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+        }
+
+        .bigcont {
+            margin: auto;
+            padding: auto;
+        }
+
+        .cont {
+            width: 100%;
+            text-align: center;
+            font-size: 4vw;
+            color: rgb(21, 5, 250);
+        }
+
+        .cont p:first-child {
+            color: blue;
+            font-size: 5vw;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+        }
+
+        span {
+            color: rgb(19, 15, 17);
+        }
+
+        button {
+            margin: 12px auto 5px auto;
+            background-color: rgb(88, 151, 88);
+            border-radius: 5px;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        input {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="bigcont">
+
+        <div class="cont vprsize">
+            <p>View-Port Size <span style="font-size: 10px;">(at resiable screen)</span> </p>
+            <p>Width x Height: <span id="vpr"></span></p>
+        </div>
+
+        <div class="cont vpfsize">
+            <p>View-Port Size <span style="font-size: 10px;">(full screen)</span></p>
+            <p>Width x Height: <span id="vpf"></span></p>
+        </div>
+
+
+        <div class="cont d">
+            <p>Device Pixcel Ratio (DPR): <span id="dpr"></span></p>
+        </div>
+
+        <div class="cont resol">
+            <p>Screen resolution</p>
+            <p>vertical x horzontal :<span id="scresol"></span></p>
+        </div>
+
+        <div class="cont Coldepth">
+            <p>Color Depth: <span id="cd"></span></p>
+        </div>
+
+        <div class=" cont orient">
+            <p>Device Orientaion: <span id="ori"></span></p>
+        </div>
+
+        <div class=" cont scrtype">
+            <p>Screen Type: <span id="srctyp"></span></p>
+        </div>
+
+        <div class="cont scrtype">
+            <p>Screen aspect ratio: <span id="ratio"></span></p>
+        </div>
+
+        <div class=" cont dpi">
+            <p> Dot per inch (DPI) of <span style="color: rgb(185, 70, 31);">display</span></p>
+            <label for="">Diagonal size:</label>
+            <input type="number" id="diagonal" placeholder="centimeter"> <br>
+            <button id="check">Check</button>
+            <button id="other">Other Parmeter </button>
+
+            <div id="otherparameter">
+            </div>
+
+            <p>DPI(Greater DPI Greater Clarity): <span id="dpi"></span></p>
+        </div>
+
+    </div>
+
+    <script>
+        let ori = document.getElementById('ori');
+        let vpr = document.getElementById('vpr');
+        let vpf = document.getElementById('vpf');
+        function viewport() {
+            vpf.innerText = ` ${window.screen.width} x ${window.screen.height}`;
+            vpr.innerText = ` ${window.innerWidth} x ${window.innerHeight}`;
+            ori.innerText = screen.orientation.type;
+        };
+        window.addEventListener('resize', viewport);
+        window.addEventListener('load', viewport);
+
+        let dpr = document.getElementById('dpr');
+        let dp = window.devicePixelRatio;
+        dpr.innerText = dp.toFixed(4);
+
+        let scresol = document.getElementById('scresol');
+        scresol.innerText = `${Math.floor(window.screen.width * devicePixelRatio)} x ${Math.floor(window.screen.height * devicePixelRatio)}`;
+
+        let cd = document.getElementById('cd');
+        cd.innerText = `${screen.colorDepth}Bit`;
+
+
+        let srctyp = document.getElementById('srctyp');
+        let px = Math.floor(window.screen.width * devicePixelRatio) * Math.floor(window.screen.height * devicePixelRatio);
+        let sd = 640 * 480;
+        let hd = 1280 * 720;
+        let hdp = 1600 * 900;
+        let fhd = 1920 * 1080;
+        let wuxga = 1920 * 1200;
+        let UHd = 2048 * 1080;
+        let Qhd = 2560 * 1440;
+        if (px < sd) {
+            srctyp.innerText = '<SD or <480p';
+        }
+        else if (px < hd && px >= sd) {
+            srctyp.innerText = 'SD or 480p';
+        }
+        else if (px < hdp && px >= hd) {
+            srctyp.innerText = 'HD or 720p';
+        }
+        else if (px < fhd && px >= hdp) {
+            srctyp.innerText = 'HD+ or 900p';
+        }
+        else if (px < wuxga && px >= fhd) {
+            srctyp.innerText = 'FHD or 1080p';
+        }
+        else if (px < UHd && px >= wuxga) {
+            srctyp.innerText = 'WUXGA or 1200p';
+        }
+        else if (px < Qhd && px >= UHd) {
+            srctyp.innerText = 'UHD';
+        }
+        else if (px >= Qhd) {
+            srctyp.innerText = 'QHD or 1440p';
+        }
+
+        let ratio = document.getElementById('ratio');
+        let vr = Math.floor(window.screen.height * devicePixelRatio.toFixed(8));
+        let hr = Math.floor(window.screen.width * devicePixelRatio.toFixed(8));
+        function gcd(a, b) {
+            while (a != b) {
+                if (a > b) {
+                    a -= b;
+                }
+                else {
+                    b -= a;
+                }
+            }
+            return a;
+        }
+        let divisr = gcd(vr, hr);
+        ratio.innerText = `${vr / divisr}:${hr / divisr}`;
+
+        let dpout = document.getElementById('dpi');
+        let diagonal = document.getElementById('diagonal');
+        let bb = document.getElementById('check');
+        bb.addEventListener('click', function () {
+            let size = diagonal.value / 2.54;
+            let hypo = Math.sqrt(Math.pow(vr, 2) + Math.pow(hr, 2));
+            dpi.innerText = hypo / size;
+
+        });
+
+        let other = document.getElementById('other');
+        let otherpara = document.getElementById('otherparameter');
+        other.addEventListener('click', function () {
+            otherpara.innerHTML = `<p>Enter these parameter to your <span style="color: rgb(185, 70, 31);">display</span> DPI </p>
+<label for="width">width:</label>
+<input type="number" id="width" placeholder="centimeter"> <br>
+<label for="height">height:</label>
+<input type="number" id="height" placeholder="centimeter">
+<br>
+<button id="btnother" onclick="calculte()"  >check</button>`;
+
+
+        });
+
+        function calculte() {
+            let wid = document.getElementById('width');
+            let hei = document.getElementById('height');
+            let diago = (Math.sqrt(Math.pow(wid.value, 2) + Math.pow(hei.value, 2))) / 2.54;
+            let hy = Math.sqrt(Math.pow(vr, 2) + Math.pow(hr, 2));
+            dpi.innerText = hy / diago;
+        };
+
+    </script>
+</body>
+<!-- <script src="site.js"></script> -->
+<script>var autoBlur = true;
+    var noPrint = true;
+    var noCopy = true;
+    var noScreenshot = true;
+    
+    if (noCopy) {
+        document.body.oncopy = function () { return false };
+        document.body.oncontextmenu = function () { return false };
+        document.body.onselectstart = document.body.ondrag = function () {
+            return false;
+        }
+        document.onkeydown = function () {
+            if (event.ctrlKey == true && event.keyCode == 83) {
+                event.preventDefault();
+            }
+        }
+    }
+    
+    if (noPrint) {
+        var c = document.createElement("span");
+        c.style.display = "none";
+        c.style.postion = "absolute";
+        c.style.background = "#000";
+        var first = document.body.firstChild;
+        var wraphtml = document.body.insertBefore(c, first);
+        c.setAttribute('width', document.body.scrollWidth);
+        c.setAttribute('height', document.body.scrollHeight);
+        c.style.display = "block";
+        var cssNode3 = document.createElement('style');
+        cssNode3.type = 'text/css';
+        cssNode3.media = 'print';
+        cssNode3.innerHTML = 'body{display:none}';
+        document.head.appendChild(cssNode3);
+    }
+    
+    var cssNode2 = document.createElement('style');
+    cssNode2.type = 'text/css';
+    cssNode2.media = 'screen';
+    cssNode2.innerHTML = 'div{-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}';
+    document.head.appendChild(cssNode2);
+    document.body.style.cssText = "-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;";
+    
+    
+    function toBlur() {
+        if (autoBlur)
+            document.body.style.cssText = "-webkit-filter: blur(5px);-moz-filter: blur(5px);-ms-filter: blur(5px);-o-filter: blur(5px);filter: blur(5px);"
+    }
+    
+    function toClear() {
+        document.body.style.cssText = "-webkit-filter: blur(0px);-moz-filter: blur(0px);-ms-filter: blur(0px);-o-filter: blur(0px);filter: blur(0px);"
+    }
+    
+    document.onclick = function (event) {
+        toClear();
+    }
+    
+    document.onmouseleave = function (event) {
+        toBlur();
+    }
+    
+    document.onblur = function (event) {
+        toBlur();
+    }
+    
+    document.addEventListener('keyup', (e) => {
+        if (e.key == 'PrintScreen') {
+            if (noScreenshot) {
+                navigator.clipboard.writeText('');
+    
+            }
+        }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key == 'p') {
+            if (noPrint) {
+                e.cancelBubble = true;
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }
+        }
+    });
+    </script>
+
+</html>
